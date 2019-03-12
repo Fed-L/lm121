@@ -1,0 +1,33 @@
+
+	//ENEMY AI - MOVES ENEMY TO CURRENT LOCATION, WHEN ENEMY GETS TO CURRENT LOACTION
+	//IT RE-CHECKS CURRENT POSITION AND MAKES ENEMY MOVE TO NEW CURRENT POSITION
+	//NOT PERFECT AI BUT WILL WORK HOW WE WANT
+
+	function enemy.moveToPlayer ( self )
+		if( not common.isRunning ) then return end
+		if( not common.isValid ( self ) ) then return end
+		local vec = deffVec ( self, player )
+		local angle = vector2Angle ( vec )
+		self.myAngle = angle
+		local len = lenVec ( vec )
+		local speed = self.speed or math.random ( 75 , 150 )
+		self.speed = speed
+		local time = 1000 * len / speed
+		-- print ( angle, len, speed, time )
+		
+		self:playAngleAnim ( "walking" , common.normRot ( angle ) )
+		
+		transition.to ( self , { x = player.x , y = player.y , time = time , onComplete = enemy } )
+	end
+	
+	-- Use selfDistruct as onComplete
+	-- OR keep going after player
+	enemy.onComplete = enemy.selfDistruct
+	enemy.onComplete = enemy.moveToPlayer
+	
+	enemy.moveToPlayer()
+	
+	-- Make another enemy in a little while
+	--
+	timer.performWithDelay ( common.enemyTweenTime , public.generate )
+end
