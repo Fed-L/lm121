@@ -1,0 +1,35 @@
+local physics = require("physics")
+physics.start()
+ 
+local redOrb = display.newImage("RedGlass.png")
+local yellowOrb = display.newImage("YellowGlass.png")
+local SPEED = 0.3
+ 
+-- put redOrb at top left
+redOrb.x = redOrb.contentWidth/2
+redOrb.y = redOrb.contentHeight/2
+ 
+-- put yellowOrb middle right
+yellowOrb.x = display.contentWidth - yellowOrb.contentWidth/2
+yellowOrb.y = display.contentHeight/2
+ 
+physics.addBody(redOrb, "kinematic", 
+   { friction=0.0, bounce=0.0, density=0.0, radius=redOrb.contentWidth/2.0 } 
+)
+ 
+physics.addBody(yellowOrb, "kinematic", 
+   { friction=0.0, bounce=0.0, density=0.0, radius=yellowOrb.contentWidth/2.0 } 
+)
+ 
+-- move towards the left at constant velocity
+yellowOrb:setLinearVelocity(-15, 0)
+ 
+function gameLoop(event)
+    -- constantly adjust velocity to track yellowOrb
+    redOrb:setLinearVelocity(
+        SPEED * (yellowOrb.x - redOrb.x),
+        SPEED * (yellowOrb.y - redOrb.y)
+    )
+end
+ 
+Runtime:addEventListener("enterFrame", gameLoop)
