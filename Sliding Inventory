@@ -1,5 +1,15 @@
 
 //   https://coronalabs.com/blog/2014/08/19/tutorial-building-a-sliding-menu/
+//  http://docs.coronalabs.com/api/library/widget/newButton.html
+
+// Question:
+// Is there any way you could include the code for it to run with the widget.newButtion() you suggested in the comment above? 
+// Answer:
+// The first example code in the documentation:
+// http://docs.coronalabs.com/api/library/widget/newButton.html
+// Would do just want you want. Just change the “handleButtonEvent” with “showSlidingMenu”
+
+// Just in case you need this ^^^^^^^^^^
 
 local widget = require( "widget")
 
