@@ -11,6 +11,12 @@
 
 // Just in case you need this ^^^^^^^^^^
 
+//------------------------------------------------------------------ 
+//READ ME
+//DO NOT USE CODE BELOW!!!!!
+//USE CODE IN MOST RECENT FILES AS THEY ARE DIFFERENT!!!!!
+//------------------------------------------------------------------ 
+
 local widget = require( "widget")
 
 local scrollView
