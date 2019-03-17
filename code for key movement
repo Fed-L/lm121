@@ -1,0 +1,44 @@
+-----------------------------------------------------------------------------------------
+--
+-- main.lua
+--
+-----------------------------------------------------------------------------------------
+
+-- Your code here
+local physics = require( "physics" )
+physics.start()
+physics.setGravity( 0, 0 )
+
+local player = display.newImageRect("spaceship.png", 100, 100)
+player.x = ccx
+player.y = ccy
+physics.addBody( player, "dynamic", {bounce=0})
+
+
+local direction = "noMove"
+Runtime:addEventListener( "enterFrame", function()
+    if direction =="right" then
+        player.rotation = 90   -- rotate to 45 degrees
+        
+        player.x = player.x + 10
+       
+    elseif ( direction== "left" ) then
+        player.rotation = 270   -- rotate to 45 degrees
+	    player.x = player.x - 10
+    elseif ( direction== "up") then
+        player.rotation = 360 -- rotate to 45 degrees
+	    player.y = player.y - 10
+    elseif ( direction== "down" ) then
+        player.rotation = 180 -- rotate to 45 degrees
+	    player.y = player.y + 10
+	end
+end)
+
+Runtime:addEventListener( "key",function(event)
+	if event.phase=="up" then
+		direction="noMove"
+	elseif event.phase=="down" then
+		direction=event.keyName
+	end
+end)
+
