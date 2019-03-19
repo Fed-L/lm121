@@ -1,0 +1,110 @@
+-----------------------------------------------------------------------------------------
+--
+-- main.lua
+--
+-----------------------------------------------------------------------------------------
+
+-- Your code here
+
+local physics = require( "physics" )
+physics.start()
+physics.setGravity( 0, 0 )
+-- Seed the random number generator
+
+local player = display.newImageRect("spaceship.png", 60, 60)
+player.x = display.contentCenterX
+player.y = display.contentHeight - 100
+physics.addBody( player, { radius=30, isSensor=true } )
+
+local physics = require("physics")
+physics.start()
+ 
+local redOrb = display.newImageRect("redOrb.png", 60, 60)
+
+local SPEED = 0.3
+ 
+-- put redOrb at top left
+redOrb.x = redOrb.contentWidth/2
+redOrb.y = redOrb.contentHeight/2
+
+ 
+physics.addBody(redOrb, "kinematic", 
+   { friction=0.0, bounce=0.0, density=0.0, radius=10} 
+)
+
+ 
+function gameLoop(event)
+    -- constantly adjust velocity to track yellowOrb
+    redOrb:setLinearVelocity(
+        SPEED * (player.x - redOrb.x),
+        SPEED * (player.y - redOrb.y)
+    )
+end
+ 
+Runtime:addEventListener("enterFrame", gameLoop)
+-------------movement
+local direction = "noMove"
+Runtime:addEventListener( "enterFrame", function()
+    if direction =="right" then
+        player.rotation = 90   -- rotate to 45 degrees
+        
+        player.x = player.x + 10
+       
+    elseif ( direction== "left" ) then
+        player.rotation = 270   -- rotate to 45 degrees
+	    player.x = player.x - 10
+    elseif ( direction== "up") then
+        player.rotation = 360 -- rotate to 45 degrees
+	    player.y = player.y - 10
+    elseif ( direction== "down" ) then
+        player.rotation = 180 -- rotate to 45 degrees
+	    player.y = player.y + 10
+	end
+end)
+
+Runtime:addEventListener( "key",function(event)
+	if event.phase=="up" then
+		direction="noMove"
+	elseif event.phase=="down" then
+		direction=event.keyName
+	end
+end)
+
+function onMouseEvent(event)
+    if(event.phase == "began") then
+        angle = math.deg(math.atan2((event.y-player.y),(event.x-player.x)))
+        player.rotation = angle + 90
+    end
+    Runtime:addEventListener( "mouse", onMouseEvent )
+end
+-- Called when a mouse event has been received.
+local function onMouseEvent( event )
+    -- Print the mouse cursor's current position to the log.
+    local message = "Mouse Position = (" .. tostring(event.x) .. "," .. tostring(event.y) .. ")"
+    print( message )
+    deltaX = event.x - player.x
+	deltaY = event.y - player.y
+    player.rotation = deltaY,deltaX
+end
+                              
+-- Add the mouse event listener.
+Runtime:addEventListener( "mouse", onMouseEvent )
+
+------code for bullets
+local speed = 100
+function shoot( event )
+    if ( event.phase == 'began' ) then
+        local projectile = display.newRect( player.x, player.y, 10, 30 )
+        physics.addBody( projectile, 'dynamic' )
+        projectile.gravityScale = 0
+        projectile.isBullet = true
+        projectile.isSensor = true
+        deltaX = event.x - player.x
+		deltaY = event.y - player.y
+        angle = math.atan2( deltaY, deltaX )   --*180/math.pi (this turns radians to degrees and messed things up.)
+        physics.addBody( projectile)
+        projectile:setLinearVelocity( math.cos( angle )*speed , math.sin( angle )*speed  )
+    end
+end
+
+Runtime:addEventListener( 'touch', shoot )
